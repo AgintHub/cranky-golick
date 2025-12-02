@@ -1,0 +1,80 @@
+dag_type: plain_text
+description: A workflow for transforming Point-of-Sale (POS) data into a Chart of
+  Accounts (CoA) system
+name: pos_to_chart_of_accounts_transformer
+nodes:
+  calculate_transaction_amounts:
+    agent: false
+    description: Calculate the transaction amounts in the CoA system currency
+    name: calculate_transaction_amounts
+    nodes_depended_on:
+    - perform_account_mapping
+    - extract_transaction_data
+    nodes_dependent_on: []
+    prompt: Calculate the transaction amounts in the CoA system currency by applying
+      the exchange rate.
+  clean_and_purge_old_logs:
+    agent: false
+    description: Clean and purge old transaction logs
+    name: clean_and_purge_old_logs
+    nodes_depended_on:
+    - validate_transaction_data
+    nodes_dependent_on: []
+    prompt: Clean and purge old transaction logs older than the specified retention
+      period.
+  extract_transaction_data:
+    agent: false
+    description: Extract transaction data from the POS system
+    name: extract_transaction_data
+    nodes_depended_on: []
+    nodes_dependent_on: []
+    prompt: Extract transaction data from the POS system, including date, customer
+      ID, transaction amount, and product codes.
+  generate_transaction_logs:
+    agent: false
+    description: Generate transaction logs for auditing and monitoring purposes
+    name: generate_transaction_logs
+    nodes_depended_on:
+    - perform_account_mapping
+    - extract_transaction_data
+    nodes_dependent_on: []
+    prompt: Generate transaction logs for auditing and monitoring purposes, including
+      transaction IDs, dates, amounts, and account numbers.
+  parse_product_codes:
+    agent: false
+    description: Parse product codes to obtain the corresponding account numbers
+    name: parse_product_codes
+    nodes_depended_on:
+    - extract_transaction_data
+    nodes_dependent_on: []
+    prompt: Parse the product codes to obtain the corresponding account numbers and
+      store them in a temporary lookup table.
+  perform_account_mapping:
+    agent: false
+    description: Map extracted transaction data to the CoA system accounts
+    name: perform_account_mapping
+    nodes_depended_on:
+    - parse_product_codes
+    - extract_transaction_data
+    nodes_dependent_on: []
+    prompt: Map the extracted transaction data to the corresponding CoA system accounts
+      based on the parsed product codes and temporary lookup table.
+  store_transaction_data_in_coa_database:
+    agent: false
+    description: Store the transaction data in the CoA system database
+    name: store_transaction_data_in_coa_database
+    nodes_depended_on:
+    - calculate_transaction_amounts
+    nodes_dependent_on: []
+    prompt: Store the transaction data in the CoA system database, including the calculated
+      transaction amounts and account mappings.
+  validate_transaction_data:
+    agent: false
+    description: Validate the transaction data for consistency and accuracy
+    name: validate_transaction_data
+    nodes_depended_on:
+    - generate_transaction_logs
+    - store_transaction_data_in_coa_database
+    nodes_dependent_on: []
+    prompt: Validate the transaction data for consistency and accuracy by checking
+      for duplicate transactions, invalid dates, and zero amount transactions.
