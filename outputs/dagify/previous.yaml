@@ -1,5 +1,6 @@
 dag_type: plain_text
-description: Generated workflow from UI.
+description: Workflow to process POS transaction data, map to CoA accounts, calculate
+  amounts, validate, and store, then ensure compatibility with Clover API.
 name: pos_to_chart_of_accounts_transformer
 nodes:
   calculate_transaction_amounts:
@@ -41,6 +42,20 @@ nodes:
       log reconciliation. Develop and maintain a data governance framework that ensures
       transparency, accountability, and compliance with relevant laws, regulations,
       and industry standards.
+  ensure_clover_api_compatibility:
+    agent: false
+    description: Ensures that all transaction data is compatible with Clover's API
+      specifications.
+    name: ensure_clover_api_compatibility
+    nodes_depended_on:
+    - validate_transaction_data
+    nodes_dependent_on: []
+    prompt: Check that all processed transaction data, including amounts, account
+      mappings, and metadata, conform to the format, data types, and schema required
+      by Clover's API. Validate that timestamps, currency codes, and product code
+      mappings are correct, and that any optional fields are properly populated or
+      omitted. Produce a compatibility report indicating pass/fail status and any
+      required adjustments.
   extract_transaction_data:
     agent: false
     description: Extracts, processes, and transforms transaction data from the Clover

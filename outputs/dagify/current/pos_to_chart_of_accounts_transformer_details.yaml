@@ -1,6 +1,5 @@
-dag_type: plain_text
-description: Workflow to process POS transaction data, map to CoA accounts, calculate
-  amounts, validate, and store, then ensure compatibility with Clover API.
+dag_type: typed
+description: Generated workflow from UI.
 name: pos_to_chart_of_accounts_transformer
 nodes:
   calculate_transaction_amounts:
@@ -13,6 +12,28 @@ nodes:
     - perform_account_mapping
     - extract_transaction_data
     nodes_dependent_on: []
+    output_structure:
+    - description: The original transaction amount in the POS system currency
+      key: original_amount
+      type: float
+    - description: The exchange rate used to convert the transaction amount to the
+        CoA system currency
+      key: exchange_rate
+      type: float
+    - description: The transaction amount converted to the CoA system currency
+      key: converted_amount
+      type: float
+    - description: List of transaction details, including date, customer ID, and product
+        codes
+      key: transaction_details
+      type: List[str]
+    - description: List of CoA system account mappings for the transaction
+      key: coa_account_mappings
+      type: List[str]
+    - description: Detailed breakdown of the calculated transaction amounts, including
+        any discrepancies or anomalies encountered during the process
+      key: calculation_breakdown
+      type: str
     prompt: Calculate the transaction amounts in the CoA system currency by applying
       the exchange rate, considering the mapping of extracted transaction data to
       the CoA system accounts, and ensuring consistency with the parsed product codes
@@ -31,6 +52,25 @@ nodes:
     nodes_depended_on:
     - validate_transaction_data
     nodes_dependent_on: []
+    output_structure:
+    - description: Number of logs purged during the cleanup process
+      key: logs_purged_count
+      type: int
+    - description: Number of logs retained after the cleanup process
+      key: logs_retained_count
+      type: int
+    - description: Estimated storage cost savings after implementing the hierarchical
+        storage strategy
+      key: storage_cost_savings
+      type: float
+    - description: Whether the data governance framework is established and compliant
+        with relevant regulations
+      key: data_governance_framework_status
+      type: bool
+    - description: List of log reconciliation results, including any discrepancies
+        or errors found
+      key: log_reconciliation_results
+      type: List[str]
     prompt: Clean and purge old transaction logs older than the specified retention
       period—applying a rigorous, rule-based filtering process that accounts for log
       type, data sensitivity, and compliance requirements—while ensuring the preservation
@@ -50,6 +90,21 @@ nodes:
     nodes_depended_on:
     - validate_transaction_data
     nodes_dependent_on: []
+    output_structure:
+    - description: Whether the transaction data is compatible with Clover's API
+      key: compatibility_status
+      type: bool
+    - description: Detailed report on the compatibility check, including any discrepancies
+        or required adjustments
+      key: compatibility_report
+      type: str
+    - description: List of fields that were validated against Clover's API specifications
+      key: validated_fields
+      type: List[str]
+    - description: List of errors or inconsistencies found during the compatibility
+        check
+      key: errors_found
+      type: List[str]
     prompt: Check that all processed transaction data, including amounts, account
       mappings, and metadata, conform to the format, data types, and schema required
       by Clover's API. Validate that timestamps, currency codes, and product code
@@ -66,6 +121,34 @@ nodes:
     name: extract_transaction_data
     nodes_depended_on: []
     nodes_dependent_on: []
+    output_structure:
+    - description: Date of the transaction in ISO format
+      key: transaction_date
+      type: str
+    - description: Unique identifier for the customer
+      key: customer_id
+      type: str
+    - description: Amount of the transaction
+      key: transaction_amount
+      type: float
+    - description: List of product codes involved in the transaction
+      key: product_codes
+      type: List[str]
+    - description: List of payment methods used in the transaction
+      key: payment_methods
+      type: List[str]
+    - description: List of any discounts or promotions applied to the transaction
+      key: discounts_or_promotions
+      type: List[str]
+    - description: Unique identifier for the transaction
+      key: transaction_id
+      type: str
+    - description: Raw transaction data extracted from the POS system
+      key: raw_transaction_data
+      type: str
+    - description: List of any validation errors encountered during data processing
+      key: validation_errors
+      type: List[str]
     prompt: Extract and process transactional data from the Clover point-of-sale (POS)
       system, integrating all relevant transaction details including date, customer
       ID, transaction amount, product codes, payment methods, and any applicable discounts
@@ -86,6 +169,37 @@ nodes:
     - perform_account_mapping
     - extract_transaction_data
     nodes_dependent_on: []
+    output_structure:
+    - description: Unique identifier for the transaction log
+      key: transaction_log_id
+      type: str
+    - description: List of transaction IDs included in the log
+      key: transaction_ids
+      type: List[str]
+    - description: List of dates corresponding to the transactions
+      key: transaction_dates
+      type: List[str]
+    - description: List of transaction amounts
+      key: transaction_amounts
+      type: List[float]
+    - description: List of account numbers associated with the transactions
+      key: account_numbers
+      type: List[str]
+    - description: List of customer IDs associated with the transactions
+      key: customer_ids
+      type: List[str]
+    - description: List of product codes associated with the transactions
+      key: product_codes
+      type: List[str]
+    - description: List of CoA system account mappings
+      key: coa_account_mappings
+      type: List[str]
+    - description: Timestamp when the log was generated
+      key: log_timestamp
+      type: str
+    - description: Sequence number of the log for ordering purposes
+      key: log_sequence_number
+      type: int
     prompt: Generate detailed transaction logs for auditing and monitoring purposes,
       including transaction IDs, dates, amounts, account numbers, customer IDs, product
       codes, and CoA system account mappings. Ensure logs are timestamped, sequenced,
@@ -100,6 +214,22 @@ nodes:
     nodes_depended_on:
     - extract_transaction_data
     nodes_dependent_on: []
+    output_structure:
+    - description: List of product codes after parsing and validation
+      key: parsed_product_codes
+      type: List[str]
+    - description: List of account numbers corresponding to the parsed product codes
+      key: account_number_mappings
+      type: List[str]
+    - description: Temporary lookup table mapping product codes to account numbers
+      key: lookup_table
+      type: List[str]
+    - description: List of validation errors encountered during parsing
+      key: validation_errors
+      type: List[str]
+    - description: Whether the parsing and validation were successful
+      key: is_parsing_successful
+      type: bool
     prompt: Parse product codes extracted from the POS system, apply a series of validation
       checks, and generate a temporary lookup table mapping product codes to their
       corresponding account numbers. Ensure the parsing logic is modular, scalable,
@@ -114,6 +244,25 @@ nodes:
     - parse_product_codes
     - extract_transaction_data
     nodes_dependent_on: []
+    output_structure:
+    - description: List of transaction IDs that have been successfully mapped to CoA
+        system accounts
+      key: mapped_transactions
+      type: List[str]
+    - description: List of discrepancies or anomalies encountered during the mapping
+        process
+      key: mapping_discrepancies
+      type: List[str]
+    - description: List of CoA system account numbers corresponding to the mapped
+        transactions
+      key: coa_account_numbers
+      type: List[str]
+    - description: Percentage of transactions successfully mapped to CoA system accounts
+      key: mapping_success_rate
+      type: float
+    - description: Number of errors encountered during the mapping process
+      key: error_count
+      type: int
     prompt: Map the extracted transaction data to the corresponding CoA system accounts
       by utilizing the parsed product codes from the temporary lookup table. Ensure
       that the mapping is accurate and robust, handling various transaction types
@@ -128,6 +277,29 @@ nodes:
     nodes_depended_on:
     - calculate_transaction_amounts
     nodes_dependent_on: []
+    output_structure:
+    - description: Unique identifier for the transaction
+      key: transaction_id
+      type: str
+    - description: Account number in the CoA system
+      key: account_number
+      type: str
+    - description: Transaction amount in the CoA system currency
+      key: transaction_amount_coa_currency
+      type: float
+    - description: Exchange rate applied for currency conversion
+      key: exchange_rate_used
+      type: float
+    - description: Original transaction amount before currency conversion
+      key: original_transaction_amount
+      type: float
+    - description: List of relevant metadata associated with the transaction
+      key: transaction_metadata
+      type: List[str]
+    - description: Whether the transaction data passed validation against CoA system
+        standards
+      key: validation_status
+      type: bool
     prompt: Store the transaction data in the CoA system database, incorporating the
       calculated transaction amounts in the CoA system currency, account mappings,
       and any relevant transactional metadata. Ensure data integrity by validating
@@ -142,6 +314,22 @@ nodes:
     - generate_transaction_logs
     - store_transaction_data_in_coa_database
     nodes_dependent_on: []
+    output_structure:
+    - description: Whether the transaction data is valid
+      key: validation_status
+      type: bool
+    - description: Number of discrepancies found during validation
+      key: discrepancy_count
+      type: int
+    - description: List of error messages encountered during validation
+      key: error_messages
+      type: List[str]
+    - description: List of duplicate transaction IDs found
+      key: duplicate_transaction_ids
+      type: List[str]
+    - description: Number of invalid date fields found
+      key: invalid_date_count
+      type: int
     prompt: 'Validate the transaction data by conducting a multi-layered assessment
       that includes: (1) detecting and flagging duplicate transactions, (2) verifying
       date fields for validity and chronological coherence, (3) identifying and handling
