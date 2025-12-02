@@ -1,80 +1,136 @@
 dag_type: plain_text
-description: A workflow for transforming Point-of-Sale (POS) data into a Chart of
-  Accounts (CoA) system
+description: Generated workflow from UI.
 name: pos_to_chart_of_accounts_transformer
 nodes:
   calculate_transaction_amounts:
     agent: false
-    description: Calculate the transaction amounts in the CoA system currency
+    description: Accurately calculates the transaction amounts in the CoA system currency,
+      taking into account the account mapping, exchange rates, and transaction data
+      extracted from the POS system, to enable precise financial tracking and management.
     name: calculate_transaction_amounts
     nodes_depended_on:
     - perform_account_mapping
     - extract_transaction_data
     nodes_dependent_on: []
     prompt: Calculate the transaction amounts in the CoA system currency by applying
-      the exchange rate.
+      the exchange rate, considering the mapping of extracted transaction data to
+      the CoA system accounts, and ensuring consistency with the parsed product codes
+      and temporary lookup table. Take into account the date, customer ID, transaction
+      amount, and product codes extracted from the POS system, and perform currency
+      conversion using the most up-to-date exchange rates. Provide a detailed breakdown
+      of the calculated transaction amounts, including the original amount, exchange
+      rate, and converted amount, to facilitate accurate financial reporting and analysis.
   clean_and_purge_old_logs:
     agent: false
-    description: Clean and purge old transaction logs
+    description: Executes a comprehensive, scheduled cleanup and purging of outdated
+      transaction logs, ensuring adherence to regulatory and organizational data retention
+      policies, while maintaining optimal system performance and storage efficiency
+      by eliminating redundant, obsolete, and corrupted log entries.
     name: clean_and_purge_old_logs
     nodes_depended_on:
     - validate_transaction_data
     nodes_dependent_on: []
     prompt: Clean and purge old transaction logs older than the specified retention
-      period.
+      period—applying a rigorous, rule-based filtering process that accounts for log
+      type, data sensitivity, and compliance requirements—while ensuring the preservation
+      of critical audit trails, debugging information, and business intelligence data.
+      Implement a hierarchical storage strategy, leveraging a combination of disk,
+      tape, and cloud-based archiving to minimize storage costs and optimize data
+      retrieval times. Validate the integrity and authenticity of retained logs through
+      periodic digital signature verification, hash-based data validation, and automated
+      log reconciliation. Develop and maintain a data governance framework that ensures
+      transparency, accountability, and compliance with relevant laws, regulations,
+      and industry standards.
   extract_transaction_data:
     agent: false
-    description: Extract transaction data from the POS system
+    description: Extracts, processes, and transforms transaction data from the Clover
+      POS system, incorporating robust data validation, sanitization, and encryption
+      to ensure accuracy, security, and compliance. This node serves as a critical
+      data ingestion point, providing high-quality transactional data for downstream
+      analytics, reporting, and business intelligence applications.
     name: extract_transaction_data
     nodes_depended_on: []
     nodes_dependent_on: []
-    prompt: Extract transaction data from the POS system, including date, customer
-      ID, transaction amount, and product codes.
+    prompt: Extract and process transactional data from the Clover point-of-sale (POS)
+      system, integrating all relevant transaction details including date, customer
+      ID, transaction amount, product codes, payment methods, and any applicable discounts
+      or promotions. Apply data validation and sanitization procedures to ensure consistency
+      and accuracy, handling potential errors or inconsistencies through robust exception
+      handling and logging mechanisms. Transform the extracted data into a structured
+      format suitable for subsequent analysis, such as JSON or CSV, incorporating
+      data encryption for secure storage and transmission. Utilize Clover's API for
+      seamless integration, leveraging webhooks for real-time transaction updates
+      and implementing idempotent requests to prevent duplicate data extraction.
   generate_transaction_logs:
     agent: false
-    description: Generate transaction logs for auditing and monitoring purposes
+    description: Creates comprehensive, granular transaction logs for auditing, monitoring,
+      and analytics purposes, incorporating detailed metadata and derived insights
+      to facilitate robust financial oversight and compliance.
     name: generate_transaction_logs
     nodes_depended_on:
     - perform_account_mapping
     - extract_transaction_data
     nodes_dependent_on: []
-    prompt: Generate transaction logs for auditing and monitoring purposes, including
-      transaction IDs, dates, amounts, and account numbers.
+    prompt: Generate detailed transaction logs for auditing and monitoring purposes,
+      including transaction IDs, dates, amounts, account numbers, customer IDs, product
+      codes, and CoA system account mappings. Ensure logs are timestamped, sequenced,
+      and formatted for efficient ingestion by downstream analytics and reporting
+      systems.
   parse_product_codes:
     agent: false
-    description: Parse product codes to obtain the corresponding account numbers
+    description: Transforms product codes into standardized account numbers through
+      a sophisticated parsing and validation process, utilizing a configurable mapping
+      framework and comprehensive error handling.
     name: parse_product_codes
     nodes_depended_on:
     - extract_transaction_data
     nodes_dependent_on: []
-    prompt: Parse the product codes to obtain the corresponding account numbers and
-      store them in a temporary lookup table.
+    prompt: Parse product codes extracted from the POS system, apply a series of validation
+      checks, and generate a temporary lookup table mapping product codes to their
+      corresponding account numbers. Ensure the parsing logic is modular, scalable,
+      and adaptable to evolving product code structures.
   perform_account_mapping:
     agent: false
-    description: Map extracted transaction data to the CoA system accounts
+    description: Maps extracted transaction data to the CoA system accounts by leveraging
+      parsed product codes and a temporary lookup table, facilitating accurate financial
+      accounting and analytics.
     name: perform_account_mapping
     nodes_depended_on:
     - parse_product_codes
     - extract_transaction_data
     nodes_dependent_on: []
     prompt: Map the extracted transaction data to the corresponding CoA system accounts
-      based on the parsed product codes and temporary lookup table.
+      by utilizing the parsed product codes from the temporary lookup table. Ensure
+      that the mapping is accurate and robust, handling various transaction types
+      and product codes. Provide a detailed report of the mapped transactions, including
+      any discrepancies or anomalies encountered during the process.
   store_transaction_data_in_coa_database:
     agent: false
-    description: Store the transaction data in the CoA system database
+    description: Stores the transaction data, including calculated amounts and account
+      mappings, in the CoA system database, ensuring data consistency and integrity
+      by aligning with the system's currency and accounting standards.
     name: store_transaction_data_in_coa_database
     nodes_depended_on:
     - calculate_transaction_amounts
     nodes_dependent_on: []
-    prompt: Store the transaction data in the CoA system database, including the calculated
-      transaction amounts and account mappings.
+    prompt: Store the transaction data in the CoA system database, incorporating the
+      calculated transaction amounts in the CoA system currency, account mappings,
+      and any relevant transactional metadata. Ensure data integrity by validating
+      against the system's accounting standards and currency conversion rules.
   validate_transaction_data:
     agent: false
-    description: Validate the transaction data for consistency and accuracy
+    description: Performs a rigorous validation of transaction data for consistency,
+      accuracy, and integrity, ensuring compliance with financial regulations and
+      organizational policies.
     name: validate_transaction_data
     nodes_depended_on:
     - generate_transaction_logs
     - store_transaction_data_in_coa_database
     nodes_dependent_on: []
-    prompt: Validate the transaction data for consistency and accuracy by checking
-      for duplicate transactions, invalid dates, and zero amount transactions.
+    prompt: 'Validate the transaction data by conducting a multi-layered assessment
+      that includes: (1) detecting and flagging duplicate transactions, (2) verifying
+      date fields for validity and chronological coherence, (3) identifying and handling
+      zero-amount transactions, (4) cross-referencing account numbers and transaction
+      IDs for accuracy, and (5) executing a series of plausibility checks on transaction
+      amounts and frequencies. Provide a detailed report outlining the validation
+      results, including any discrepancies, errors, or inconsistencies found.'
