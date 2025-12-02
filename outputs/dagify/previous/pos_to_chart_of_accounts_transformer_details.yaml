@@ -1,12 +1,64 @@
-dag_type: spec
+dag_type: stub
 description: Generated workflow from UI.
 name: pos_to_chart_of_accounts_transformer
 nodes:
   calculate_transaction_amounts:
     agent: false
+    code_node_type: stub
     description: Accurately calculates the transaction amounts in the CoA system currency,
       taking into account the account mapping, exchange rates, and transaction data
       extracted from the POS system, to enable precise financial tracking and management.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass PerformAccountMappingOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for perform_account_mapping node outputs.\"\"\"\n    mapped_transactions:\
+      \ List[str] = Field(..., description=\"List of transaction IDs that have been\
+      \ successfully mapped to CoA system accounts\")\n    mapping_discrepancies:\
+      \ List[str] = Field(..., description=\"List of discrepancies or anomalies encountered\
+      \ during the mapping process\")\n    coa_account_numbers: List[str] = Field(...,\
+      \ description=\"List of CoA system account numbers corresponding to the mapped\
+      \ transactions\")\n    mapping_success_rate: float = Field(..., description=\"\
+      Percentage of transactions successfully mapped to CoA system accounts\")\n \
+      \   error_count: int = Field(..., description=\"Number of errors encountered\
+      \ during the mapping process\")\n\n\nclass ExtractTransactionDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for extract_transaction_data node outputs.\"\"\"\n\
+      \    transaction_date: str = Field(..., description=\"Date of the transaction\
+      \ in ISO format\")\n    customer_id: str = Field(..., description=\"Unique identifier\
+      \ for the customer\")\n    transaction_amount: float = Field(..., description=\"\
+      Amount of the transaction\")\n    product_codes: str = Field(..., description=\"\
+      List of product codes involved in the transaction\")\n    payment_methods: str\
+      \ = Field(..., description=\"List of payment methods used in the transaction\"\
+      )\n    discounts_or_promotions: str = Field(..., description=\"List of any discounts\
+      \ or promotions applied to the transaction\")\n    transaction_id: str = Field(...,\
+      \ description=\"Unique identifier for the transaction\")\n    raw_transaction_data:\
+      \ str = Field(..., description=\"Raw transaction data extracted from the POS\
+      \ system\")\n    validation_errors: str = Field(..., description=\"List of any\
+      \ validation errors encountered during data processing\")\n\n\nclass CalculateTransactionAmountsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for calculate_transaction_amounts node outputs.\"\"\
+      \"\n    original_amount: float = Field(..., description=\"The original transaction\
+      \ amount in the POS system currency\")\n    exchange_rate: float = Field(...,\
+      \ description=\"The exchange rate used to convert the transaction amount to\
+      \ the CoA system currency\")\n    converted_amount: float = Field(..., description=\"\
+      The transaction amount converted to the CoA system currency\")\n    transaction_details:\
+      \ str = Field(..., description=\"List of transaction details, including date,\
+      \ customer ID, and product codes\")\n    coa_account_mappings: str = Field(...,\
+      \ description=\"List of CoA system account mappings for the transaction\")\n\
+      \    calculation_breakdown: str = Field(..., description=\"Detailed breakdown\
+      \ of the calculated transaction amounts, including any discrepancies or anomalies\
+      \ encountered during the process\")\n\n\ndef calculate_transaction_amounts(perform_account_mapping_input:\
+      \ PerformAccountMappingOutput, extract_transaction_data_input: ExtractTransactionDataOutput,\
+      \ **kwargs) -> CalculateTransactionAmountsOutput:\n    \"\"\"Accurately calculates\
+      \ the transaction amounts in the CoA system currency, taking into account the\
+      \ account mapping, exchange rates, and transaction data extracted from the POS\
+      \ system, to enable precise financial tracking and management.\n\n    Args:\n\
+      \        perform_account_mapping_input: Input from the 'perform_account_mapping'\
+      \ node.\n        extract_transaction_data_input: Input from the 'extract_transaction_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       CalculateTransactionAmountsOutput: Object containing outputs for this\
+      \ node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub\
+      \ output with placeholder values\n    return CalculateTransactionAmountsOutput(\n\
+      \        original_amount=0.0,\n        exchange_rate=0.0,\n        converted_amount=0.0,\n\
+      \        transaction_details=\"\",\n        coa_account_mappings=\"\",\n   \
+      \     calculation_breakdown=\"\",\n    )"
     name: calculate_transaction_amounts
     nodes_depended_on:
     - perform_account_mapping
@@ -96,12 +148,46 @@ nodes:
       conversion using the most up-to-date exchange rates. Provide a detailed breakdown
       of the calculated transaction amounts, including the original amount, exchange
       rate, and converted amount, to facilitate accurate financial reporting and analysis.
+    shims: []
   clean_and_purge_old_logs:
     agent: false
+    code_node_type: stub
     description: Executes a comprehensive, scheduled cleanup and purging of outdated
       transaction logs, ensuring adherence to regulatory and organizational data retention
       policies, while maintaining optimal system performance and storage efficiency
       by eliminating redundant, obsolete, and corrupted log entries.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass ValidateTransactionDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for validate_transaction_data node outputs.\"\"\"\n\
+      \    validation_status: bool = Field(..., description=\"Whether the transaction\
+      \ data is valid\")\n    discrepancy_count: int = Field(..., description=\"Number\
+      \ of discrepancies found during validation\")\n    error_messages: str = Field(...,\
+      \ description=\"List of error messages encountered during validation\")\n  \
+      \  duplicate_transaction_ids: str = Field(..., description=\"List of duplicate\
+      \ transaction IDs found\")\n    invalid_date_count: int = Field(..., description=\"\
+      Number of invalid date fields found\")\n\n\nclass CleanAndPurgeOldLogsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for clean_and_purge_old_logs node outputs.\"\"\"\n\
+      \    logs_purged_count: int = Field(..., description=\"Number of logs purged\
+      \ during the cleanup process\")\n    logs_retained_count: int = Field(..., description=\"\
+      Number of logs retained after the cleanup process\")\n    storage_cost_savings:\
+      \ float = Field(..., description=\"Estimated storage cost savings after implementing\
+      \ the hierarchical storage strategy\")\n    data_governance_framework_status:\
+      \ bool = Field(..., description=\"Whether the data governance framework is established\
+      \ and compliant with relevant regulations\")\n    log_reconciliation_results:\
+      \ str = Field(..., description=\"List of log reconciliation results, including\
+      \ any discrepancies or errors found\")\n\n\ndef clean_and_purge_old_logs(validate_transaction_data_input:\
+      \ ValidateTransactionDataOutput, **kwargs) -> CleanAndPurgeOldLogsOutput:\n\
+      \    \"\"\"Executes a comprehensive, scheduled cleanup and purging of outdated\
+      \ transaction logs, ensuring adherence to regulatory and organizational data\
+      \ retention policies, while maintaining optimal system performance and storage\
+      \ efficiency by eliminating redundant, obsolete, and corrupted log entries.\n\
+      \n    Args:\n        validate_transaction_data_input: Input from the 'validate_transaction_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       CleanAndPurgeOldLogsOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return CleanAndPurgeOldLogsOutput(\n        logs_purged_count=0,\n\
+      \        logs_retained_count=0,\n        storage_cost_savings=0.0,\n       \
+      \ data_governance_framework_status=False,\n        log_reconciliation_results=\"\
+      \",\n    )"
     name: clean_and_purge_old_logs
     nodes_depended_on:
     - validate_transaction_data
@@ -228,10 +314,39 @@ nodes:
       log reconciliation. Develop and maintain a data governance framework that ensures
       transparency, accountability, and compliance with relevant laws, regulations,
       and industry standards.
+    shims: []
   ensure_clover_api_compatibility:
     agent: false
+    code_node_type: stub
     description: Ensures that all transaction data is compatible with Clover's API
       specifications.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass ValidateTransactionDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for validate_transaction_data node outputs.\"\"\"\n\
+      \    validation_status: bool = Field(..., description=\"Whether the transaction\
+      \ data is valid\")\n    discrepancy_count: int = Field(..., description=\"Number\
+      \ of discrepancies found during validation\")\n    error_messages: str = Field(...,\
+      \ description=\"List of error messages encountered during validation\")\n  \
+      \  duplicate_transaction_ids: str = Field(..., description=\"List of duplicate\
+      \ transaction IDs found\")\n    invalid_date_count: int = Field(..., description=\"\
+      Number of invalid date fields found\")\n\n\nclass EnsureCloverApiCompatibilityOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for ensure_clover_api_compatibility node outputs.\"\
+      \"\"\n    compatibility_status: bool = Field(..., description=\"Whether the\
+      \ transaction data is compatible with Clover's API\")\n    compatibility_report:\
+      \ str = Field(..., description=\"Detailed report on the compatibility check,\
+      \ including any discrepancies or required adjustments\")\n    validated_fields:\
+      \ str = Field(..., description=\"List of fields that were validated against\
+      \ Clover's API specifications\")\n    errors_found: str = Field(..., description=\"\
+      List of errors or inconsistencies found during the compatibility check\")\n\n\
+      \ndef ensure_clover_api_compatibility(validate_transaction_data_input: ValidateTransactionDataOutput,\
+      \ **kwargs) -> EnsureCloverApiCompatibilityOutput:\n    \"\"\"Ensures that all\
+      \ transaction data is compatible with Clover's API specifications.\n\n    Args:\n\
+      \        validate_transaction_data_input: Input from the 'validate_transaction_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       EnsureCloverApiCompatibilityOutput: Object containing outputs for this\
+      \ node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub\
+      \ output with placeholder values\n    return EnsureCloverApiCompatibilityOutput(\n\
+      \        compatibility_status=False,\n        compatibility_report=\"\",\n \
+      \       validated_fields=\"\",\n        errors_found=\"\",\n    )"
     name: ensure_clover_api_compatibility
     nodes_depended_on:
     - validate_transaction_data
@@ -307,13 +422,43 @@ nodes:
       mappings are correct, and that any optional fields are properly populated or
       omitted. Produce a compatibility report indicating pass/fail status and any
       required adjustments.
+    shims: []
   extract_transaction_data:
     agent: false
+    code_node_type: stub
     description: Extracts, processes, and transforms transaction data from the Clover
       POS system, incorporating robust data validation, sanitization, and encryption
       to ensure accuracy, security, and compliance. This node serves as a critical
       data ingestion point, providing high-quality transactional data for downstream
       analytics, reporting, and business intelligence applications.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass ExtractTransactionDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for extract_transaction_data node outputs.\"\"\"\n\
+      \    transaction_date: str = Field(..., description=\"Date of the transaction\
+      \ in ISO format\")\n    customer_id: str = Field(..., description=\"Unique identifier\
+      \ for the customer\")\n    transaction_amount: float = Field(..., description=\"\
+      Amount of the transaction\")\n    product_codes: str = Field(..., description=\"\
+      List of product codes involved in the transaction\")\n    payment_methods: str\
+      \ = Field(..., description=\"List of payment methods used in the transaction\"\
+      )\n    discounts_or_promotions: str = Field(..., description=\"List of any discounts\
+      \ or promotions applied to the transaction\")\n    transaction_id: str = Field(...,\
+      \ description=\"Unique identifier for the transaction\")\n    raw_transaction_data:\
+      \ str = Field(..., description=\"Raw transaction data extracted from the POS\
+      \ system\")\n    validation_errors: str = Field(..., description=\"List of any\
+      \ validation errors encountered during data processing\")\n\n\ndef extract_transaction_data(general_input:\
+      \ str, **kwargs) -> ExtractTransactionDataOutput:\n    \"\"\"Extracts, processes,\
+      \ and transforms transaction data from the Clover POS system, incorporating\
+      \ robust data validation, sanitization, and encryption to ensure accuracy, security,\
+      \ and compliance. This node serves as a critical data ingestion point, providing\
+      \ high-quality transactional data for downstream analytics, reporting, and business\
+      \ intelligence applications.\n\n    Args:\n        general_input: General input\
+      \ string for the root node.\n        **kwargs: Additional keyword arguments.\n\
+      \n    Returns:\n        ExtractTransactionDataOutput: Object containing outputs\
+      \ for this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return ExtractTransactionDataOutput(\n\
+      \        transaction_date=\"\",\n        customer_id=\"\",\n        transaction_amount=0.0,\n\
+      \        product_codes=\"\",\n        payment_methods=\"\",\n        discounts_or_promotions=\"\
+      \",\n        transaction_id=\"\",\n        raw_transaction_data=\"\",\n    \
+      \    validation_errors=\"\",\n    )"
     name: extract_transaction_data
     nodes_depended_on: []
     nodes_dependent_on: []
@@ -405,11 +550,68 @@ nodes:
       data encryption for secure storage and transmission. Utilize Clover's API for
       seamless integration, leveraging webhooks for real-time transaction updates
       and implementing idempotent requests to prevent duplicate data extraction.
+    shims: []
   generate_transaction_logs:
     agent: false
+    code_node_type: stub
     description: Creates comprehensive, granular transaction logs for auditing, monitoring,
       and analytics purposes, incorporating detailed metadata and derived insights
       to facilitate robust financial oversight and compliance.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass PerformAccountMappingOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for perform_account_mapping node outputs.\"\"\"\n    mapped_transactions:\
+      \ List[str] = Field(..., description=\"List of transaction IDs that have been\
+      \ successfully mapped to CoA system accounts\")\n    mapping_discrepancies:\
+      \ List[str] = Field(..., description=\"List of discrepancies or anomalies encountered\
+      \ during the mapping process\")\n    coa_account_numbers: List[str] = Field(...,\
+      \ description=\"List of CoA system account numbers corresponding to the mapped\
+      \ transactions\")\n    mapping_success_rate: float = Field(..., description=\"\
+      Percentage of transactions successfully mapped to CoA system accounts\")\n \
+      \   error_count: int = Field(..., description=\"Number of errors encountered\
+      \ during the mapping process\")\n\n\nclass ExtractTransactionDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for extract_transaction_data node outputs.\"\"\"\n\
+      \    transaction_date: str = Field(..., description=\"Date of the transaction\
+      \ in ISO format\")\n    customer_id: str = Field(..., description=\"Unique identifier\
+      \ for the customer\")\n    transaction_amount: float = Field(..., description=\"\
+      Amount of the transaction\")\n    product_codes: str = Field(..., description=\"\
+      List of product codes involved in the transaction\")\n    payment_methods: str\
+      \ = Field(..., description=\"List of payment methods used in the transaction\"\
+      )\n    discounts_or_promotions: str = Field(..., description=\"List of any discounts\
+      \ or promotions applied to the transaction\")\n    transaction_id: str = Field(...,\
+      \ description=\"Unique identifier for the transaction\")\n    raw_transaction_data:\
+      \ str = Field(..., description=\"Raw transaction data extracted from the POS\
+      \ system\")\n    validation_errors: str = Field(..., description=\"List of any\
+      \ validation errors encountered during data processing\")\n\n\nclass GenerateTransactionLogsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for generate_transaction_logs node outputs.\"\"\"\n\
+      \    transaction_log_id: str = Field(..., description=\"Unique identifier for\
+      \ the transaction log\")\n    transaction_ids: str = Field(..., description=\"\
+      List of transaction IDs included in the log\")\n    transaction_dates: str =\
+      \ Field(..., description=\"List of dates corresponding to the transactions\"\
+      )\n    transaction_amounts: float = Field(..., description=\"List of transaction\
+      \ amounts\")\n    account_numbers: str = Field(..., description=\"List of account\
+      \ numbers associated with the transactions\")\n    customer_ids: str = Field(...,\
+      \ description=\"List of customer IDs associated with the transactions\")\n \
+      \   product_codes: str = Field(..., description=\"List of product codes associated\
+      \ with the transactions\")\n    coa_account_mappings: str = Field(..., description=\"\
+      List of CoA system account mappings\")\n    log_timestamp: str = Field(...,\
+      \ description=\"Timestamp when the log was generated\")\n    log_sequence_number:\
+      \ int = Field(..., description=\"Sequence number of the log for ordering purposes\"\
+      )\n\n\ndef generate_transaction_logs(perform_account_mapping_input: PerformAccountMappingOutput,\
+      \ extract_transaction_data_input: ExtractTransactionDataOutput, **kwargs) ->\
+      \ GenerateTransactionLogsOutput:\n    \"\"\"Creates comprehensive, granular\
+      \ transaction logs for auditing, monitoring, and analytics purposes, incorporating\
+      \ detailed metadata and derived insights to facilitate robust financial oversight\
+      \ and compliance.\n\n    Args:\n        perform_account_mapping_input: Input\
+      \ from the 'perform_account_mapping' node.\n        extract_transaction_data_input:\
+      \ Input from the 'extract_transaction_data' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        GenerateTransactionLogsOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ GenerateTransactionLogsOutput(\n        transaction_log_id=\"\",\n       \
+      \ transaction_ids=\"\",\n        transaction_dates=\"\",\n        transaction_amounts=0.0,\n\
+      \        account_numbers=\"\",\n        customer_ids=\"\",\n        product_codes=\"\
+      \",\n        coa_account_mappings=\"\",\n        log_timestamp=\"\",\n     \
+      \   log_sequence_number=0,\n    )"
     name: generate_transaction_logs
     nodes_depended_on:
     - perform_account_mapping
@@ -506,11 +708,48 @@ nodes:
       codes, and CoA system account mappings. Ensure logs are timestamped, sequenced,
       and formatted for efficient ingestion by downstream analytics and reporting
       systems.
+    shims: []
   parse_product_codes:
     agent: false
+    code_node_type: stub
     description: Transforms product codes into standardized account numbers through
       a sophisticated parsing and validation process, utilizing a configurable mapping
       framework and comprehensive error handling.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ExtractTransactionDataOutput(BaseModel):\n    \"\"\"Pydantic model\
+      \ for extract_transaction_data node outputs.\"\"\"\n    transaction_date: str\
+      \ = Field(..., description=\"Date of the transaction in ISO format\")\n    customer_id:\
+      \ str = Field(..., description=\"Unique identifier for the customer\")\n   \
+      \ transaction_amount: float = Field(..., description=\"Amount of the transaction\"\
+      )\n    product_codes: str = Field(..., description=\"List of product codes involved\
+      \ in the transaction\")\n    payment_methods: str = Field(..., description=\"\
+      List of payment methods used in the transaction\")\n    discounts_or_promotions:\
+      \ str = Field(..., description=\"List of any discounts or promotions applied\
+      \ to the transaction\")\n    transaction_id: str = Field(..., description=\"\
+      Unique identifier for the transaction\")\n    raw_transaction_data: str = Field(...,\
+      \ description=\"Raw transaction data extracted from the POS system\")\n    validation_errors:\
+      \ str = Field(..., description=\"List of any validation errors encountered during\
+      \ data processing\")\n\n\nclass ParseProductCodesOutput(BaseModel):\n    \"\"\
+      \"Pydantic model for parse_product_codes node outputs.\"\"\"\n    parsed_product_codes:\
+      \ List[str] = Field(..., description=\"List of product codes after parsing and\
+      \ validation\")\n    account_number_mappings: List[str] = Field(..., description=\"\
+      List of account numbers corresponding to the parsed product codes\")\n    lookup_table:\
+      \ List[str] = Field(..., description=\"Temporary lookup table mapping product\
+      \ codes to account numbers\")\n    validation_errors: List[str] = Field(...,\
+      \ description=\"List of validation errors encountered during parsing\")\n  \
+      \  is_parsing_successful: bool = Field(..., description=\"Whether the parsing\
+      \ and validation were successful\")\n\n\ndef parse_product_codes(extract_transaction_data_input:\
+      \ ExtractTransactionDataOutput, **kwargs) -> ParseProductCodesOutput:\n    \"\
+      \"\"Transforms product codes into standardized account numbers through a sophisticated\
+      \ parsing and validation process, utilizing a configurable mapping framework\
+      \ and comprehensive error handling.\n\n    Args:\n        extract_transaction_data_input:\
+      \ Input from the 'extract_transaction_data' node.\n        **kwargs: Additional\
+      \ keyword arguments.\n\n    Returns:\n        ParseProductCodesOutput: Object\
+      \ containing outputs for this node.\n    \"\"\"\n    # TODO: Implement this\
+      \ function\n\n    # Return stub output with placeholder values\n    return ParseProductCodesOutput(\n\
+      \        parsed_product_codes=[],\n        account_number_mappings=[],\n   \
+      \     lookup_table=[],\n        validation_errors=[],\n        is_parsing_successful=False,\n\
+      \    )"
     name: parse_product_codes
     nodes_depended_on:
     - extract_transaction_data
@@ -574,11 +813,59 @@ nodes:
       checks, and generate a temporary lookup table mapping product codes to their
       corresponding account numbers. Ensure the parsing logic is modular, scalable,
       and adaptable to evolving product code structures.
+    shims: []
   perform_account_mapping:
     agent: false
+    code_node_type: stub
     description: Maps extracted transaction data to the CoA system accounts by leveraging
       parsed product codes and a temporary lookup table, facilitating accurate financial
       accounting and analytics.
+    implementation: "from pydantic import BaseModel, Field\nfrom typing import List\n\
+      \n\nclass ParseProductCodesOutput(BaseModel):\n    \"\"\"Pydantic model for\
+      \ parse_product_codes node outputs.\"\"\"\n    parsed_product_codes: List[str]\
+      \ = Field(..., description=\"List of product codes after parsing and validation\"\
+      )\n    account_number_mappings: List[str] = Field(..., description=\"List of\
+      \ account numbers corresponding to the parsed product codes\")\n    lookup_table:\
+      \ List[str] = Field(..., description=\"Temporary lookup table mapping product\
+      \ codes to account numbers\")\n    validation_errors: List[str] = Field(...,\
+      \ description=\"List of validation errors encountered during parsing\")\n  \
+      \  is_parsing_successful: bool = Field(..., description=\"Whether the parsing\
+      \ and validation were successful\")\n\n\nclass ExtractTransactionDataOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for extract_transaction_data node outputs.\"\"\"\n\
+      \    transaction_date: str = Field(..., description=\"Date of the transaction\
+      \ in ISO format\")\n    customer_id: str = Field(..., description=\"Unique identifier\
+      \ for the customer\")\n    transaction_amount: float = Field(..., description=\"\
+      Amount of the transaction\")\n    product_codes: str = Field(..., description=\"\
+      List of product codes involved in the transaction\")\n    payment_methods: str\
+      \ = Field(..., description=\"List of payment methods used in the transaction\"\
+      )\n    discounts_or_promotions: str = Field(..., description=\"List of any discounts\
+      \ or promotions applied to the transaction\")\n    transaction_id: str = Field(...,\
+      \ description=\"Unique identifier for the transaction\")\n    raw_transaction_data:\
+      \ str = Field(..., description=\"Raw transaction data extracted from the POS\
+      \ system\")\n    validation_errors: str = Field(..., description=\"List of any\
+      \ validation errors encountered during data processing\")\n\n\nclass PerformAccountMappingOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for perform_account_mapping node outputs.\"\"\"\n\
+      \    mapped_transactions: List[str] = Field(..., description=\"List of transaction\
+      \ IDs that have been successfully mapped to CoA system accounts\")\n    mapping_discrepancies:\
+      \ List[str] = Field(..., description=\"List of discrepancies or anomalies encountered\
+      \ during the mapping process\")\n    coa_account_numbers: List[str] = Field(...,\
+      \ description=\"List of CoA system account numbers corresponding to the mapped\
+      \ transactions\")\n    mapping_success_rate: float = Field(..., description=\"\
+      Percentage of transactions successfully mapped to CoA system accounts\")\n \
+      \   error_count: int = Field(..., description=\"Number of errors encountered\
+      \ during the mapping process\")\n\n\ndef perform_account_mapping(parse_product_codes_input:\
+      \ ParseProductCodesOutput, extract_transaction_data_input: ExtractTransactionDataOutput,\
+      \ **kwargs) -> PerformAccountMappingOutput:\n    \"\"\"Maps extracted transaction\
+      \ data to the CoA system accounts by leveraging parsed product codes and a temporary\
+      \ lookup table, facilitating accurate financial accounting and analytics.\n\n\
+      \    Args:\n        parse_product_codes_input: Input from the 'parse_product_codes'\
+      \ node.\n        extract_transaction_data_input: Input from the 'extract_transaction_data'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       PerformAccountMappingOutput: Object containing outputs for this node.\n\
+      \    \"\"\"\n    # TODO: Implement this function\n\n    # Return stub output\
+      \ with placeholder values\n    return PerformAccountMappingOutput(\n       \
+      \ mapped_transactions=[],\n        mapping_discrepancies=[],\n        coa_account_numbers=[],\n\
+      \        mapping_success_rate=0.0,\n        error_count=0,\n    )"
     name: perform_account_mapping
     nodes_depended_on:
     - parse_product_codes
@@ -656,11 +943,50 @@ nodes:
       that the mapping is accurate and robust, handling various transaction types
       and product codes. Provide a detailed report of the mapped transactions, including
       any discrepancies or anomalies encountered during the process.
+    shims: []
   store_transaction_data_in_coa_database:
     agent: false
+    code_node_type: stub
     description: Stores the transaction data, including calculated amounts and account
       mappings, in the CoA system database, ensuring data consistency and integrity
       by aligning with the system's currency and accounting standards.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass CalculateTransactionAmountsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for calculate_transaction_amounts node outputs.\"\"\
+      \"\n    original_amount: float = Field(..., description=\"The original transaction\
+      \ amount in the POS system currency\")\n    exchange_rate: float = Field(...,\
+      \ description=\"The exchange rate used to convert the transaction amount to\
+      \ the CoA system currency\")\n    converted_amount: float = Field(..., description=\"\
+      The transaction amount converted to the CoA system currency\")\n    transaction_details:\
+      \ str = Field(..., description=\"List of transaction details, including date,\
+      \ customer ID, and product codes\")\n    coa_account_mappings: str = Field(...,\
+      \ description=\"List of CoA system account mappings for the transaction\")\n\
+      \    calculation_breakdown: str = Field(..., description=\"Detailed breakdown\
+      \ of the calculated transaction amounts, including any discrepancies or anomalies\
+      \ encountered during the process\")\n\n\nclass StoreTransactionDataInCoaDatabaseOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for store_transaction_data_in_coa_database node outputs.\"\
+      \"\"\n    transaction_id: str = Field(..., description=\"Unique identifier for\
+      \ the transaction\")\n    account_number: str = Field(..., description=\"Account\
+      \ number in the CoA system\")\n    transaction_amount_coa_currency: float =\
+      \ Field(..., description=\"Transaction amount in the CoA system currency\")\n\
+      \    exchange_rate_used: float = Field(..., description=\"Exchange rate applied\
+      \ for currency conversion\")\n    original_transaction_amount: float = Field(...,\
+      \ description=\"Original transaction amount before currency conversion\")\n\
+      \    transaction_metadata: str = Field(..., description=\"List of relevant metadata\
+      \ associated with the transaction\")\n    validation_status: bool = Field(...,\
+      \ description=\"Whether the transaction data passed validation against CoA system\
+      \ standards\")\n\n\ndef store_transaction_data_in_coa_database(calculate_transaction_amounts_input:\
+      \ CalculateTransactionAmountsOutput, **kwargs) -> StoreTransactionDataInCoaDatabaseOutput:\n\
+      \    \"\"\"Stores the transaction data, including calculated amounts and account\
+      \ mappings, in the CoA system database, ensuring data consistency and integrity\
+      \ by aligning with the system's currency and accounting standards.\n\n    Args:\n\
+      \        calculate_transaction_amounts_input: Input from the 'calculate_transaction_amounts'\
+      \ node.\n        **kwargs: Additional keyword arguments.\n\n    Returns:\n \
+      \       StoreTransactionDataInCoaDatabaseOutput: Object containing outputs for\
+      \ this node.\n    \"\"\"\n    # TODO: Implement this function\n\n    # Return\
+      \ stub output with placeholder values\n    return StoreTransactionDataInCoaDatabaseOutput(\n\
+      \        transaction_id=\"\",\n        account_number=\"\",\n        transaction_amount_coa_currency=0.0,\n\
+      \        exchange_rate_used=0.0,\n        original_transaction_amount=0.0,\n\
+      \        transaction_metadata=\"\",\n        validation_status=False,\n    )"
     name: store_transaction_data_in_coa_database
     nodes_depended_on:
     - calculate_transaction_amounts
@@ -733,11 +1059,62 @@ nodes:
       calculated transaction amounts in the CoA system currency, account mappings,
       and any relevant transactional metadata. Ensure data integrity by validating
       against the system's accounting standards and currency conversion rules.
+    shims: []
   validate_transaction_data:
     agent: false
+    code_node_type: stub
     description: Performs a rigorous validation of transaction data for consistency,
       accuracy, and integrity, ensuring compliance with financial regulations and
       organizational policies.
+    implementation: "from pydantic import BaseModel, Field\n\n\nclass GenerateTransactionLogsOutput(BaseModel):\n\
+      \    \"\"\"Pydantic model for generate_transaction_logs node outputs.\"\"\"\n\
+      \    transaction_log_id: str = Field(..., description=\"Unique identifier for\
+      \ the transaction log\")\n    transaction_ids: str = Field(..., description=\"\
+      List of transaction IDs included in the log\")\n    transaction_dates: str =\
+      \ Field(..., description=\"List of dates corresponding to the transactions\"\
+      )\n    transaction_amounts: float = Field(..., description=\"List of transaction\
+      \ amounts\")\n    account_numbers: str = Field(..., description=\"List of account\
+      \ numbers associated with the transactions\")\n    customer_ids: str = Field(...,\
+      \ description=\"List of customer IDs associated with the transactions\")\n \
+      \   product_codes: str = Field(..., description=\"List of product codes associated\
+      \ with the transactions\")\n    coa_account_mappings: str = Field(..., description=\"\
+      List of CoA system account mappings\")\n    log_timestamp: str = Field(...,\
+      \ description=\"Timestamp when the log was generated\")\n    log_sequence_number:\
+      \ int = Field(..., description=\"Sequence number of the log for ordering purposes\"\
+      )\n\n\nclass StoreTransactionDataInCoaDatabaseOutput(BaseModel):\n    \"\"\"\
+      Pydantic model for store_transaction_data_in_coa_database node outputs.\"\"\"\
+      \n    transaction_id: str = Field(..., description=\"Unique identifier for the\
+      \ transaction\")\n    account_number: str = Field(..., description=\"Account\
+      \ number in the CoA system\")\n    transaction_amount_coa_currency: float =\
+      \ Field(..., description=\"Transaction amount in the CoA system currency\")\n\
+      \    exchange_rate_used: float = Field(..., description=\"Exchange rate applied\
+      \ for currency conversion\")\n    original_transaction_amount: float = Field(...,\
+      \ description=\"Original transaction amount before currency conversion\")\n\
+      \    transaction_metadata: str = Field(..., description=\"List of relevant metadata\
+      \ associated with the transaction\")\n    validation_status: bool = Field(...,\
+      \ description=\"Whether the transaction data passed validation against CoA system\
+      \ standards\")\n\n\nclass ValidateTransactionDataOutput(BaseModel):\n    \"\"\
+      \"Pydantic model for validate_transaction_data node outputs.\"\"\"\n    validation_status:\
+      \ bool = Field(..., description=\"Whether the transaction data is valid\")\n\
+      \    discrepancy_count: int = Field(..., description=\"Number of discrepancies\
+      \ found during validation\")\n    error_messages: str = Field(..., description=\"\
+      List of error messages encountered during validation\")\n    duplicate_transaction_ids:\
+      \ str = Field(..., description=\"List of duplicate transaction IDs found\")\n\
+      \    invalid_date_count: int = Field(..., description=\"Number of invalid date\
+      \ fields found\")\n\n\ndef validate_transaction_data(generate_transaction_logs_input:\
+      \ GenerateTransactionLogsOutput, store_transaction_data_in_coa_database_input:\
+      \ StoreTransactionDataInCoaDatabaseOutput, **kwargs) -> ValidateTransactionDataOutput:\n\
+      \    \"\"\"Performs a rigorous validation of transaction data for consistency,\
+      \ accuracy, and integrity, ensuring compliance with financial regulations and\
+      \ organizational policies.\n\n    Args:\n        generate_transaction_logs_input:\
+      \ Input from the 'generate_transaction_logs' node.\n        store_transaction_data_in_coa_database_input:\
+      \ Input from the 'store_transaction_data_in_coa_database' node.\n        **kwargs:\
+      \ Additional keyword arguments.\n\n    Returns:\n        ValidateTransactionDataOutput:\
+      \ Object containing outputs for this node.\n    \"\"\"\n    # TODO: Implement\
+      \ this function\n\n    # Return stub output with placeholder values\n    return\
+      \ ValidateTransactionDataOutput(\n        validation_status=False,\n       \
+      \ discrepancy_count=0,\n        error_messages=\"\",\n        duplicate_transaction_ids=\"\
+      \",\n        invalid_date_count=0,\n    )"
     name: validate_transaction_data
     nodes_depended_on:
     - generate_transaction_logs
@@ -815,3 +1192,4 @@ nodes:
       IDs for accuracy, and (5) executing a series of plausibility checks on transaction
       amounts and frequencies. Provide a detailed report outlining the validation
       results, including any discrepancies, errors, or inconsistencies found.'
+    shims: []
